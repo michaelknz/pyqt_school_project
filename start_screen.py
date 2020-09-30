@@ -1,5 +1,5 @@
 from PyQt5 import uic
-from PyQt5.QtWidgets import QWidget,QPushButton
+from PyQt5.QtWidgets import QWidget, QPushButton
 
 class StartSc(QWidget):
     def __init__(self, parent=None):

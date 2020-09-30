@@ -5,7 +5,6 @@ from start_screen import *
 class main_window(QMainWindow):
     def __init__(self, parent=None):
         QMainWindow.__init__(self,parent)
-        self.gl_Widget=OpenGL_Widget(self)
         self.StartScreen=StartSc()
         self.setCentralWidget(self.StartScreen)
         self.setWindowTitle("pyqt_game")
@@ -14,5 +13,7 @@ class main_window(QMainWindow):
         self.StartScreen.destroyed.connect(self.gl_init)
 
     def gl_init(self):
-        self.gl_Widget.show()
+        self.gl_Widget = OpenGL_Widget(self)
+        self.gl_Widget.update()
         self.setCentralWidget(self.gl_Widget)
+        self.gl_Widget.show()
