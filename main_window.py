@@ -17,3 +17,6 @@ class main_window(QMainWindow):
         self.gl_Widget.update()
         self.setCentralWidget(self.gl_Widget)
         self.gl_Widget.show()
+
+        self.gl_Widget.timer.timeout.connect(self.gl_Widget.Loop)
+        self.gl_Widget.timer.start(1000 / 60)
