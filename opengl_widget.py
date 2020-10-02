@@ -11,14 +11,16 @@ class OpenGL_Widget(QOpenGLWidget):
         self.setGeometry(300,300,800,600)
         self.Camera=camera(800,600)
         self.vert=[-0.5,-0.5,-1.0,0.0,0.0,
-                   0.5,0.5,-0.5,0.0,0.0,
+                   0.5,0.5,-1.0,0.0,0.0,
                    0.5,-0.5,-1.0,0.0,0.0,
                    -0.5,-0.5,-1.0,0.0,0.0,
-                   -0.5,0.5,-0.5,0.0,0.0,
-                   0.5,0.5,-0.5,0.0,0.0]
+                   -0.5,0.5,-1.0,0.0,0.0,
+                   0.5,0.5,-1.0,0.0,0.0]
         self.shade_file='basic'
         self.Mesh=0
+        self.angle=0
         self.hide()
+        self.frameSwapped.connect(self.Start_timer)
 
     def initializeGL(self):
         glClearColor(0.3,0.5,0.5,1.0)
@@ -28,9 +30,6 @@ class OpenGL_Widget(QOpenGLWidget):
 
 
     def paintGL(self):
-        glUseProgram(self.shader.GetShader())
-        glUniformMatrix4fv(glGetUniformLocation(self.shader.GetShader(), 'view'), 1, GL_FALSE, self.Camera.Get_View())
-        glUniformMatrix4fv(glGetUniformLocation(self.shader.GetShader(), 'projection'), 1, GL_FALSE, self.Camera.Get_Projection())
         self.Mesh.DrawMesh(self.shader.GetShader())
 
     def SetShader(self,file):
@@ -52,4 +51,15 @@ class OpenGL_Widget(QOpenGLWidget):
             self.vert[i]=vert[i]
 
     def Loop(self):
+        self.context().currentContext().makeCurrent(self.context().currentContext().surface())
+        self.angle+=0.01
+        glUseProgram(self.shader.GetShader())
+        glUniformMatrix4fv(glGetUniformLocation(self.shader.GetShader(), 'model'), 1, GL_FALSE, matrix.To_np(matrix.Rotate(self.angle,matrix.vector3f(0.0,0.0,1.0))))
+        glUniformMatrix4fv(glGetUniformLocation(self.shader.GetShader(), 'view'), 1, GL_FALSE, self.Camera.Get_View())
+        glUniformMatrix4fv(glGetUniformLocation(self.shader.GetShader(), 'projection'), 1, GL_FALSE, self.Camera.Get_Projection())
+        glUseProgram(0)
         self.update()
+
+    def Start_timer(self):
+        self.timer.timeout.connect(self.Loop)
+        self.timer.start(1000 / 30)

@@ -74,15 +74,82 @@ def cross(vec,vec1):
 
 def LookAt(CameraPos,CameraFront,CameraUp):
     zaxis=normalize(CameraFront)
-    xaxis=normalize(cross(zaxis,CameraUp))
-    yaxis=cross(xaxis,zaxis)
+    xaxis=normalize(cross(CameraUp,zaxis))
+    yaxis=cross(zaxis,xaxis)
 
     out=mat4()
 
     out.mas=[xaxis.mas[0],yaxis.mas[0],zaxis.mas[0],0.0,
              xaxis.mas[1],yaxis.mas[1],zaxis.mas[1],0.0,
              xaxis.mas[2],yaxis.mas[2],zaxis.mas[2],0.0,
-             -dot(xaxis,CameraPos),-dot(CameraPos,yaxis),-dot(CameraPos,zaxis),1.0]
+             -CameraPos.mas[0],-CameraPos.mas[1],-CameraPos.mas[2],1.0]
+    return out
+
+def Rotate(angle,vec):
+    out=mat4()
+    if vec.mas[0]==1:
+        out.mas[0] = 1
+        out.mas[4] = 0
+        out.mas[8] = 0
+        out.mas[12] = 0
+
+        out.mas[1] = 0
+        out.mas[5] = math.cos(math.radians(angle))
+        out.mas[9] = math.sin(math.radians(angle))
+        out.mas[13] = 0
+
+        out.mas[2] = 0
+        out.mas[6] = -math.sin(math.radians(angle))
+        out.mas[10] = math.cos(math.radians(angle))
+        out.mas[14] = 0
+
+        out.mas[3] = 0
+        out.mas[7] = 0
+        out.mas[11] = 0
+        out.mas[15] = 1
+
+    elif vec.mas[1]==1:
+        out.mas[0] = math.cos(math.radians(angle))
+        out.mas[4] = 0
+        out.mas[8] = math.sin(math.radians(angle))
+        out.mas[12] = 0
+
+        out.mas[1] = 0
+        out.mas[5] = 1
+        out.mas[9] = 0
+        out.mas[13] = 0
+
+        out.mas[2] = -math.sin(math.radians(angle))
+        out.mas[6] = 0
+        out.mas[10] = math.cos(math.radians(angle))
+        out.mas[14] = 0
+
+        out.mas[3] = 0
+        out.mas[7] = 0
+        out.mas[11] = 0
+        out.mas[15] = 1
+
+    elif vec.mas[2]==1:
+        out.mas[0] = math.cos(math.radians(angle))
+        out.mas[4] = -math.sin(math.radians(angle))
+        out.mas[8] = 0
+        out.mas[12] = 0
+
+        out.mas[1] = math.sin(math.radians(angle))
+        out.mas[5] = math.cos(math.radians(angle))
+        out.mas[9] = 0
+        out.mas[13] = 0
+
+        out.mas[2] = 0
+        out.mas[6] = 0
+        out.mas[10] = 1
+        out.mas[14] = 0
+
+        out.mas[3] = 0
+        out.mas[7] = 0
+        out.mas[11] = 0
+        out.mas[15] = 1
+
     return Transplon(out)
 
 def Transplon(mat):

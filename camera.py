@@ -5,7 +5,7 @@ import matrix
 
 class camera:
     def __init__(self,width,height):
-        self.CameraPos=matrix.vector3f(0.0,0.0,0.0)
+        self.CameraPos=matrix.vector3f(0.0,0.0,2.5)
         self.CameraDir=matrix.vector3f(0.0,0.0,-1.0)
         self.CameraUp=matrix.vector3f(0.0,1.0,0.0)
         self.ViewMatrix=matrix.mat4()
